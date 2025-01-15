@@ -42,3 +42,7 @@ Write a playbook to:
     ```sh
     sh ./init.sh
     ```
+
+## What's missing to practice:
+1. Use a dynamic inventory
+2. Access the web server by a local domain name instead of 0.0.0.0:8080
