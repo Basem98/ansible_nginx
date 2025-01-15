@@ -1,0 +1,29 @@
+- name: "Remove the remote default conf file from sites enabled after installation"
+  command: "sudo rm /etc/nginx/sites-enabled/default -f"
+
+- name: "Remove the remote default conf from sites available file after installation"
+  command: "sudo rm /etc/nginx/sites-available/default -f"
+
+- name: "Copy the configuration file to the remote host's sites available folder"
+  ansible.builtin.copy:
+    src: "/home/ansible/nginx-ansible/playbooks/roles/nginx/files/{{ domain }}"
+    dest: /etc/nginx/sites-available
+    owner: "{{ ansible_user }}"
+
+- name: "Copy the configuration file to the remote host's sites enabled folder"
+  ansible.builtin.copy:
+    src: "/home/ansible/nginx-ansible/playbooks/roles/nginx/files/{{ domain }}"
+    dest: /etc/nginx/sites-enabled
+    owner: "{{ ansible_user }}"
+
+- name: "Change owner of /etc/hosts file to be able to write to it"
+  command: "sudo chown ansible:ansible /etc/hosts"
+
+- name: "Stop the nginx service if previously running"
+  command: "sudo systemctl stop nginx"
+
+- name: "Start the nginx service again for changes to take effect"
+  command: "sudo systemctl start nginx"
+
+- name: "Allow the port through ufw"
+  command: "sudo ufw allow {{ port }}"

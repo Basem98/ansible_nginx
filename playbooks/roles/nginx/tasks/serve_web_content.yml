@@ -1,0 +1,7 @@
+- name: "Create static folder only if it doesn't exist"
+  command: "sudo mkdir /var/www/ansiblenginx.com /var/www/{{ domain }}/html -p"
+
+- name: "Copy the static html file to the static folder"
+  ansible.builtin.copy:
+    src: "/home/ansible/nginx-ansible/playbooks/roles/nginx/files/index.html"
+    dest: "/var/www/{{ domain }}/html"

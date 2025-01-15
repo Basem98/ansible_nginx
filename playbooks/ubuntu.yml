@@ -1,0 +1,28 @@
+- name: Ubuntu Nginx Web Server
+  hosts: nginx_hosts
+  become: yes
+  become_method: sudo
+  vars:
+    sudo_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          33643862313439336531363665333265343265373833343363663535663863336161306532386438
+          6563333039643366343235613261306138303539356434320a306333313763633737353234636635
+          38353163396134376434616636323165626335656232663336383630663161326536663532323835
+          6431303936363539300a626438663132656666653561666431303763636563613732316130356664
+          6161
+    ansible_become_password: "{{ sudo_password }}"
+  tasks:
+    - name: "Install nginx"
+      include_role:
+        name: "nginx"
+        tasks_from: "install_nginx.yml"
+
+    - name: "Prepare static files"
+      include_role:
+        name: "nginx"
+        tasks_from: "serve_web_content.yml"
+
+    - name: "Configure and start server"
+      include_role:
+        name: "nginx"
+        tasks_from: "configure_virtual_host.yml"
